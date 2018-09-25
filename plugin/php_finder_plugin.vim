@@ -3,13 +3,16 @@ if !has("python3")
     finish
 endif
 
+" Only load the library once.
 if exists('g:php_finder_plugin')
-    echo "Other library called php_finder_plugin is installed. It's her or me!!"
     finish
 endif
 
 " Setting global commodity variables
 let g:php_finder_plugin_path = expand("<sfile>:p:h")
+
+"Open php file path in window on top. Used in conjunction with Findme methods.
+noremap :oo 0vf:<left>y<c-w>k<leader>e <c-r>0<cr><c-w>j
 
 " Add this library python modules into the system path.
 function! PhpFinderPlugin()
@@ -26,13 +29,13 @@ sys.path.append(python_module_path)
 endpython
 endfunction
 
+" Finds methods in the current file.
 function! FindmeMethods()
 python3 << endpython
-
-import findInFile
+import findinfile
 
 file_path = vim.eval('expand("%:p")')
-methods = findInFile.methods(file_path)
+methods = findinfile.methods(file_path)
 
 if 0 == len(methods):
     print("No methods where found, my master...")
@@ -42,6 +45,75 @@ for key in methods:
     for method in methods[key]:
         print(method)
 
+endpython
+endfunction
+
+" Finds usage of string in files in path.
+command! -nargs=+ Findmeusage call FindmeUsage(<f-args>)
+function! FindmeUsage(needle, path)
+python3 <<endpython
+import findinfile
+
+needle = vim.eval("a:needle")
+path = vim.eval("a:path")
+
+hitlist = findinfile.find_usage(path, needle, [])
+
+vim.command("botright new")
+vim.command("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap")
+
+for line in hitlist:
+    vim.command("normal 0i" + line)
+    vim.command("normal o")
+
+vim.command("normal gg")
+endpython
+endfunction
+
+" Finds class in files in path.
+command! -nargs=+ Findmeclass call FindmeClass(<f-args>)
+function! FindmeClass(classname, path)
+python3 <<endpython
+import findinfile
+
+needle = 'class ' + vim.eval("a:classname")
+
+path = vim.eval("a:path")
+
+classlist = findinfile.find_usage(path, needle, [])
+
+vim.command("botright new")
+vim.command("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap")
+
+for line in classlist:
+    vim.command("normal 0i" + line)
+    vim.command("normal o")
+
+vim.command("normal gg")
+result = []
+endpython
+endfunction
+
+" Finds class in files in path.
+command! -nargs=+ Findmethismethod call FindmeThisMethod(<f-args>)
+function! FindmeThisMethod(methodname, path)
+python3 <<endpython
+import findinfile
+
+needle = 'function ' + vim.eval("a:methodname")
+
+path = vim.eval("a:path")
+
+methodslist = findinfile.find_usage(path, needle, [])
+
+vim.command("botright new")
+vim.command("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap")
+
+for line in methodslist:
+    vim.command("normal 0i" + line)
+    vim.command("normal o")
+
+vim.command("normal gg")
 endpython
 endfunction
 
