@@ -1,15 +1,15 @@
 PHP Finder Vim Plugin
 =======================
-``By, <ajavalera@gmail.com>``
+``By, <ajavalera*AT*gmail.com>``
 
 What is this?
 ------------------
 This is a Vim plugin, [Pathogen](https://github.com/tpope/vim-pathogen) compatible, written in Python 3, that aims to add the following functionality to your most absolute coolest VIM text editor:
 
 - Find and display sorted PHP methods `(currently working)`
-- Find and open PHP classes `(In progress)`
-- Manage Namespaces
-- Find usage of PHP code across current files and whole project
+- Find and open PHP classes `(currently working)`
+- Manage Namespaces `(in progress)`
+- Find usage of PHP code across current files and whole project `(currently working)`
 - Other things that I haven't thought of yet...
 
 Maturity
