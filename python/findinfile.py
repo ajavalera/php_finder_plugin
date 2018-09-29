@@ -43,7 +43,6 @@ def methods(filePath):
             "protected": sorted(protectedMethods)
             }
 
-
 def find_usage(path, needle, result=[]):
     try:
         dirlist = os.listdir(path)
@@ -52,7 +51,7 @@ def find_usage(path, needle, result=[]):
             filepath = path + os.sep + fname
 
             if os.path.isfile(filepath):
-                if False == is_valid_file_name(fname):
+                if is_invalid_file_name(fname):
                     continue
 
                 with open(filepath, 'rt') as f:
@@ -68,18 +67,14 @@ def find_usage(path, needle, result=[]):
     except:
         print("\n\n" + path + " Errored out:", sys.exc_info()[0])
 
-def is_valid_file_name(fname):
+def is_invalid_file_name(fname):
     acceptedfiles = [
             '.php',
-            '.txt',
-            '.css',
-            '.js',
-            '.py',
-            '.vim'
+            '.txt'
             ]
 
     for ext in acceptedfiles:
         if ext in fname:
-            return True
+            return False
 
-    return False
+    return True

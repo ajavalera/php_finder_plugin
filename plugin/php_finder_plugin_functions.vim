@@ -105,3 +105,24 @@ for line in methodslist:
 vim.command("normal gg")
 endpython
 endfunction
+
+command! -nargs=+ Findmethisnamespace call FindmeThisNamespace(<f-args>)
+function! FindmeThisNamespace(subject, path)
+python3 <<endpython
+import findinfile
+
+needle = "namespace " + vim.eval("a:subject")
+path = vim.eval("a:path")
+
+hitlist = findinfile.find_usage(path, needle)
+
+vim.command("botright new")
+vim.command("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap")
+
+for line in hitlist:
+    vim.command("normal 0i" + line)
+    vim.command("normal o")
+
+vim.command("normal gg")
+endpython
+endfunction
