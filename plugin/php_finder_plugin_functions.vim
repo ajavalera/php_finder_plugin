@@ -105,3 +105,42 @@ for line in methodslist:
 vim.command("normal gg")
 endpython
 endfunction
+
+command! -nargs=+ Findmethisnamespace call FindmeThisNamespace(<f-args>)
+function! FindmeThisNamespace(subject, path)
+python3 <<endpython
+import findinfile
+
+needle = "namespace " + vim.eval("a:subject")
+path = vim.eval("a:path")
+
+hitlist = findinfile.find_usage(path, needle)
+
+vim.command("botright new")
+vim.command("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap")
+
+for line in hitlist:
+    vim.command("normal 0i" + line)
+    vim.command("normal o")
+
+vim.command("normal gg")
+
+command! -nargs=+ Insertnamespace call InsertNameSpace(<f-args>)
+function! InsertNameSpace(path)
+python3 <<endpython
+from phpclass import PhpClass
+
+path = vim.eval("a:path")
+phpclass = PhpClass(path)
+
+vim.command("normal 0Cuse " + phpclass.fullnamespace + ";")
+print(phpclass.fullnamespace + " inserted")
+
+del(phpclass.fullnamespace)
+del(phpclass.classname)
+del(phpclass.path)
+del(phpclass.namespace)
+del(phpclass)
+del(path)
+endpython
+endfunction

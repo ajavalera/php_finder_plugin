@@ -26,12 +26,18 @@ class PhpClass:
                 namespace = line.replace("namespace ","")
                 namespace = namespace.replace(";", "")
                 self.namespace = namespace.rstrip()
+                break
 
     def SetClassName(self):
         for line in self.content:
             if 'class' in line:
-                linelist= line.split(" ")
+                linelist= line.split("class")
                 self.classname = linelist[1].rstrip()
+
+                linelist2 = self.classname.split(" ")
+                self.classname = linelist2[1].rstrip()
+                self.classname = self.classname.replace(" ", "")
+                break
 
     def SetFullNamespace(self):
         self.fullnamespace = self.namespace + '\\' + self.classname
